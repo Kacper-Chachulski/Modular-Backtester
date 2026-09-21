@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build native backtester engine",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\build_native.ps1",
+        "-Python",
+        "${workspaceFolder}\\.venv\\Scripts\\python.exe"
+      ],
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+}

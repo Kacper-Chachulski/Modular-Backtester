@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start Backtester UI",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "module": "uvicorn",
+      "args": [
+        "backtester.web.main:app",
+        "--reload"
+      ],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}\\src"
+      },
+      "preLaunchTask": "Build native backtester engine",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Uvicorn running on (https?://[^\\s]+)",
+        "uriFormat": "%s"
+      },
+      "justMyCode": true
+    }
+  ]
+}
