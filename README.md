@@ -44,3 +44,9 @@ Open this project folder in VS Code and press **F5** (or use **Run and Debug** â
 The included example is long-only: buy when a fast EMA is above a slow EMA and RSI is below a configurable ceiling; sell when the EMA relationship reverses. Indicator and execution calculations run in `cpp/engine.cpp`; Python owns data acquisition, persistence, strategy composition, and the UI.
 
 `yfinance` is deliberately behind a provider interface, so it can later be replaced by a broker, paid data feed, or local parquet reader without changing the engine.
+
+## Market data and cache
+
+The starter provider is [Yahoo Finance](https://finance.yahoo.com/) through the `yfinance` Python package. It downloads daily adjusted OHLCV bars (`auto_adjust=True`). This is convenient for prototyping, but is not a licensed institutional data feed.
+
+Downloaded bars are stored locally in `data/backtester.db` (SQLite). The cache also records the exact source, symbol, and half-open date ranges (`[start, end)`) that were downloaded. Requests are served from SQLite only when those records form uninterrupted coverage for the complete selected range; otherwise the missing request range is downloaded and merged. This avoids accidentally calculating from a partial, overlapping cache.

@@ -1,4 +1,5 @@
 import pytest
+from tempfile import TemporaryDirectory
 
 native = pytest.importorskip("backtester._native")
 
@@ -55,3 +56,14 @@ def test_inverse_signal_execution_reverses_without_going_to_cash():
     )
     assert result["trades"] == 3  # long entry, long close, short entry
     assert result["final_equity"] == pytest.approx(12_100.0)
+
+
+def test_downloaded_ranges_only_cover_contiguous_intervals():
+    from backtester.data.storage import SQLiteBarStore
+
+    with TemporaryDirectory() as directory:
+        store = SQLiteBarStore(f"{directory}/prices.db")
+        store.record_download("yahoo_finance", "SPY", "2020-01-01", "2021-01-01")
+        store.record_download("yahoo_finance", "SPY", "2021-01-01", "2022-01-01")
+        assert store.covers("yahoo_finance", "SPY", "2020-06-01", "2021-06-01")
+        assert not store.covers("yahoo_finance", "SPY", "2019-01-01", "2021-06-01")
